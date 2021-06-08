@@ -14,7 +14,6 @@ var jwt = require("jsonwebtoken");
       });
       return newUser
     } catch (err) {
-        console.log("error", err)
       throw new ErrorHandler(
         500,
         "Unable to register user at this time. Please try again later."
@@ -35,7 +34,7 @@ var jwt = require("jsonwebtoken");
 
       if (!checkPassword) return { code: 401, message: "Invalid Password" };
 
-      let token = jwt.sign({ id: user.id }, process.env.API_SECRET, {
+      let token = jwt.sign({ id: user.id, role: user.role }, process.env.API_SECRET, {
         expiresIn: 86400, // 24 hours
       });
 
