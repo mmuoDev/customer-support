@@ -1,0 +1,293 @@
+openapi: 3.0.0
+info:
+  title: Customer Support API
+  version: 1.0.0
+  description: APIs to add and resolve support tickets
+
+paths:
+  /api/signup:
+    post:
+      summary: Add a user
+      description: This endpoint allows you to add a user
+      requestBody:
+        $ref: "#/components/requestBodies/AddUser"
+      responses:
+        "201":
+          description: "OK - Created"
+        "403":
+          description: "Email address already exists"
+        "500":
+          description: "Internal Server Error"
+  /api/login:
+    post:
+      summary: Authenticates a user
+      description: This endpoint allows you to authenticate a user and generate token
+      requestBody:
+        $ref: "#/components/requestBodies/Auth"
+      responses:
+        "200":
+          $ref: "#/components/responses/AuthResponse"
+        "404":
+          description: "User Not found"
+        "500":
+          description: "Internal Server Error"
+  /api/tickets:
+    post:
+      summary: Add a ticket
+      description: This endpoint allows you to add a ticket
+      requestBody:
+        $ref: "#/components/requestBodies/AddTicket"
+      responses:
+        "201":
+          $ref: "#/components/responses/AddTicketResponse"
+        "403":
+          description: "Require Customer Role"
+        "500":
+          description: "Internal Server Error"
+      security:
+        - bearerAuth: []
+    get:
+      summary: Get tickets
+      description: This endpoint allows you to retrieve all tickets
+      responses:
+        "201":
+          $ref: "#/components/responses/RetrieveTicketsResponse"
+        "401":
+          description: "User is unauthorized"
+        "500":
+          description: "Internal Server Error"
+      security:
+        - bearerAuth: []
+  /api/tickets/{ticketId}/comments:
+    post:
+      summary: Add a comment
+      description: This endpoint allows you to add a comemnt
+      requestBody:
+        $ref: "#/components/requestBodies/AddComment"
+      responses:
+        "201":
+          $ref: "#/components/responses/AddCommentResponse"
+        "401":
+          description: "User is unauthorized"
+        "500":
+          description: "Internal Server Error"
+      parameters:
+        - $ref: "#/components/parameters/ticketId"
+      security:
+        - bearerAuth: []
+  /api/tickets/{ticketId}/resolve:
+    put:
+      summary: Resolve a ticket
+      description: Resolve a ticket to either closed or in progress
+      requestBody:
+        $ref: "#/components/requestBodies/ResolveTicket"
+      responses:
+        "204":
+          description: "Ok - No Content"
+        "401":
+          description: "User is unauthorized"
+        "500":
+          description: "Internal Server Error"
+      parameters:
+        - $ref: "#/components/parameters/ticketId"
+  /api/tickets/exports/records:
+    get:
+      summary: Export closed tickets in csv
+      description: Export closed tickets in csv
+      responses:
+        "200":
+          description: "Ok"
+        "401":
+          description: "User is unauthorized"
+        "500":
+          description: "Internal Server Error"
+components:
+  parameters:
+    ticketId:
+      name: ticketId
+      in: path
+      description: id of the ticket
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:   
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ResolveTicket:
+      description: A JSON request body containing the information needed to resolve a ticket
+      type: object
+      properties:
+        status:
+          type: string
+          example: "closed"
+    AddComment:
+      description: A JSON request body containing the information needed to add a comment
+      type: object
+      properties:
+        comment:
+          type: string
+    AddUser:
+      description: A JSON request body containing the information needed to add a user
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          example: admin 
+    AuthResponse:
+      description: A JSON request body containing the information after authenticating a user
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "37656879803"
+                accessToken:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV"
+    RetrieveTicketsResponse:
+      description: A JSON request body containing the information after authenticating a user
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "37656879803"
+              subject:
+                type: string
+                example: "double charge"
+              status:
+                type: string
+                example: "open"
+    AddTicketResponse:
+      description: A JSON request body containing the information after adding a ticket
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "37656879803"
+            subject:
+              type: string
+              example: "double charge"
+            status:
+              type: string
+              example: "open"
+    AddCommentResponse:
+      description: A JSON request body containing the information after adding a comment
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "37656879803"
+            comment:
+              type: string
+              example: "it has been resolved"
+    AddTicket:
+      description: A JSON request body containing the information needed to add a ticket
+      type: object
+      properties:
+        subject:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          example: technical 
+    Auth:
+      description: A JSON request body containing the information needed to authenticate a user
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+  requestBodies:
+    ResolveTicket:
+      description: A JSON request body containing information needed to resolve a ticket
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResolveTicket"
+    AddUser:
+      description: A JSON request body containing information needed to add a user
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddUser"
+    Auth:
+      description: A JSON request body containing information needed to authenticate a user
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Auth"
+    AddTicket:
+      description: A JSON request body containing information needed to add a ticket
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddTicket"
+    AddComment:
+      description: A JSON request body containing information needed to add a comment
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddComment"
+  responses:
+    AuthResponse:
+      description: A JSON response body representing response after authenticating a user
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AuthResponse"
+    AddTicketResponse:
+      description: A JSON response body representing response after adding a ticket
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddTicketResponse"
+    RetrieveTicketsResponse:
+      description: A JSON response body representing response after retrieving all tickets
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RetrieveTicketsResponse"
+    AddCommentResponse:
+      description: A JSON response body representing response after adding a comment
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddCommentResponse"
+

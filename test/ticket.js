@@ -109,7 +109,6 @@ describe("Tickets", () => {
         subject: "double charge",
         description: "double charge",
         category: "technical",
-        userId: "12345",
       };
 
       var newTicket = new Ticket(ticket);
@@ -117,8 +116,7 @@ describe("Tickets", () => {
         ticketId = newTicket._id;
         let comment = {
           comment: "thank you for resolving",
-          ticketId: ticketId,
-          userId: "12345",
+         
         };
         chai
           .request(server)

@@ -20,7 +20,7 @@ routes.post(
         req.body.password,
         req.body.role
       );
-      httpResponse.send(res, 201, "User created", newUser);
+      httpResponse.send(res, 201, "User created", {});
     } catch (err) {
       handleError(err, res);
     }

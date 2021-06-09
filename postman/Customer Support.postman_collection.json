@@ -1,0 +1,734 @@
+{
+	"info": {
+		"_postman_id": "1a0b6011-8a3c-48d5-8250-68dab2367627",
+		"name": "Customer Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYmUxY2Y5MWFjODM4NDk1NDQ1MmI2MCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYyMzE2ODE2MSwiZXhwIjoxNjIzMjU0NTYxfQ.2RBl-XP1kgvZMQ-RGww7mxKa_SmEUekiYYBwPqudTZU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"email\": \"test2@test.com\",\n   \"password\": \"password\",\n   \"role\": \"customer\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYmUxY2Y5MWFjODM4NDk1NDQ1MmI2MCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYyMzE2ODE2MSwiZXhwIjoxNjIzMjU0NTYxfQ.2RBl-XP1kgvZMQ-RGww7mxKa_SmEUekiYYBwPqudTZU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"email\": \"test2@test.com\",\n   \"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Ticket",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYzBjNWJjMTVmYTc1MjUwN2ZmMzE0ZiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTYyMzI0NjMyMiwiZXhwIjoxNjIzMzMyNzIyfQ.3VcbEwJxxrI6kI0Uh8NA2sPP3Nwrl_0448_QyjXTgtQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"subject\": \"double charge\",\n   \"description\": \"double charge\",\n   \"category\": \"technical\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/tickets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tickets",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYzBjNWJjMTVmYTc1MjUwN2ZmMzE0ZiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTYyMzI0NjMyMiwiZXhwIjoxNjIzMzMyNzIyfQ.3VcbEwJxxrI6kI0Uh8NA2sPP3Nwrl_0448_QyjXTgtQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/tickets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Comment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYzBjNWJjMTVmYTc1MjUwN2ZmMzE0ZiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTYyMzI0NjMyMiwiZXhwIjoxNjIzMzMyNzIyfQ.3VcbEwJxxrI6kI0Uh8NA2sPP3Nwrl_0448_QyjXTgtQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"comment\": \"new comment\"\n\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/tickets/60c0ca795cca202bcdc66670/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"tickets",
+						"60c0ca795cca202bcdc66670",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resolve a Ticket",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYmUxY2Y5MWFjODM4NDk1NDQ1MmI2MCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYyMzI0ODI4MywiZXhwIjoxNjIzMzM0NjgzfQ.L6uW0cgrGFMWfbbvZZRuYUPWzACvj0kCmu8Ar1tdFZE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"closed\"\n\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/tickets/60c0ca795cca202bcdc66670/resolve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"tickets",
+						"60c0ca795cca202bcdc66670",
+						"resolve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EXport Closed Tickets",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var milliseconds = new Date().getTime();",
+							"var timestamp = milliseconds * 1000000",
+							"pm.environment.set(\"timestamp\", timestamp);",
+							"",
+							"var authURL = pm.environment.get(\"auth-service-url\") + \"/oauth2/token\";",
+							"",
+							"var clientID = pm.environment.get(\"webBackendClientID\") ",
+							"var secretID = pm.environment.get(\"webBackendSecretID\") ",
+							"",
+							"var eStr = btoa(clientID + \":\" + secretID);",
+							"console.log(eStr)",
+							"",
+							"var request = {",
+							"    url: authURL,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'content-type': 'application/x-www-form-urlencoded',",
+							"        'Authorization': 'Basic ' + eStr},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: \"grant_type=client_credentials\"",
+							"    }",
+							"}",
+							"console.log(request)",
+							"",
+							"pm.sendRequest(request, function (err, response) {",
+							"    console.log(\"Recieved auth response\")",
+							"    var authToken = response.json().access_token;",
+							"    console.log(authToken)",
+							"    pm.collectionVariables.set(\"authToken\", authToken);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X_Request_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "X_Session_ID",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-MultiTenantKey",
+						"value": "helen",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYmUxY2Y5MWFjODM4NDk1NDQ1MmI2MCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYyMzI0ODI4MywiZXhwIjoxNjIzMzM0NjgzfQ.L6uW0cgrGFMWfbbvZZRuYUPWzACvj0kCmu8Ar1tdFZE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"closed\"\n\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/tickets/exports/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"tickets",
+						"exports",
+						"records"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": ""
+		}
+	]
+}
