@@ -26,7 +26,7 @@ $ npm test
 ```  
 
 ### OpenAPI Spec
-The OpenAPI spec for this service can be found in the `open-api-yaml` file. Upload to https://editor.swagger.io/ to view. 
+The OpenAPI spec for this service can be found in the `open-api.yaml` file. Upload to https://editor.swagger.io/ to view. 
 
 ### Postman Collection
 The Postman collection can be found in the `postman` folder
