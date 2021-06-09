@@ -1,5 +1,5 @@
-# customer-support API
-A NodeJS customer support API to add and resolve support tickets
+# customer-support service
+A NodeJS customer support service to add and resolve support tickets
 
 ## Requirements
 - MongoDB
