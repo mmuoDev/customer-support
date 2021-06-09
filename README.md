@@ -6,7 +6,7 @@ A NodeJS customer support service to add and resolve support tickets
 
 ## Functionalities
 - Add User
-- Authenticate Author
+- Authenticate User
 - Add Ticket
 - Add Comment
 - Resolve Ticket
