@@ -13,6 +13,7 @@ const {
 } = require("../middlewares/validators");
 const httpResponse = require("../helpers/httpResponse");
 
+//Add a ticket
 routes.post(
   "/",
   checkCategoryExists,
@@ -34,6 +35,7 @@ routes.post(
   }
 );
 
+//Retrieve ticket
 routes.get("/:id", verifyToken, isAuthorized, async (req, res) => {
   try {
     const ticket = await ticketService.fetchOne(req.params.id);
@@ -43,15 +45,17 @@ routes.get("/:id", verifyToken, isAuthorized, async (req, res) => {
   }
 });
 
+//Retrieve tickets
 routes.get("/", verifyToken, async (req, res) => {
   try {
     const tickets = await ticketService.fetchAll();
-    httpResponse.send(res, 201, "Tickets retrieved", tickets);
+    httpResponse.send(res, 200, "Tickets retrieved", tickets);
   } catch (err) {
     handleError(err, res);
   }
 });
 
+//Add comments for a ticket
 routes.post(
   "/:id/comments",
   verifyToken,
@@ -71,15 +75,17 @@ routes.post(
   }
 );
 
+//Retrieve comments for a ticket
 routes.get("/:id/comments", verifyToken, validate, async (req, res) => {
   try {
     const comments = await commentService.fetchAllByTicket(req.params.id);
-    httpResponse.send(res, 201, "Comments retrieved!", comments);
+    httpResponse.send(res, 200, "Comments retrieved!", comments);
   } catch (err) {
     handleError(err, res);
   }
 });
 
+//Resolve a ticket
 routes.put(
   "/:id/resolve",
   verifyToken,
@@ -98,6 +104,7 @@ routes.put(
   }
 );
 
+//Export closed ticket
 routes.get("/exports/records", verifyToken, isAdmin, async (req, res) => {
   try {
     const tickets = await ticketService.records();

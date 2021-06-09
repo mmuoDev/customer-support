@@ -1,7 +1,5 @@
 const ticketModel = require("../models/ticket.model");
 const { ErrorHandler } = require("../helpers/errorHandler");
-var bcrypt = require("bcryptjs");
-var jwt = require("jsonwebtoken");
 const json2csv = require("json2csv").parse;
 const fs = require("fs");
 const moment = require("moment");

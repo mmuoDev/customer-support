@@ -24,7 +24,11 @@ app.use((err, req, res, next) => {
 
 //mongo
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
-const mongo = mongoose.connect(process.env.MONGO_URL, options);
+let mongoURL = process.env.MONGO_URL
+if (process.env.NODE_ENV == "test") {
+  mongoURL = process.env.MONGO_TEST_URL
+}
+const mongo = mongoose.connect(mongoURL, options);
 
 mongo.then(
   () => {
@@ -45,3 +49,5 @@ app.set("port", process.env.PORT || 9000);
 app.listen(app.get("port"), () => {
   console.log("App listening on port " + process.env.PORT);
 });
+
+module.exports = app
